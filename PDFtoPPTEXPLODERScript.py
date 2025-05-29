@@ -11,12 +11,19 @@ def convert_pdf_to_images(pdf_path, output_folder, dpi=200):
     """Converts PDF pages to images and returns a list of saved image paths."""
     poppler_path = "/opt/homebrew/bin"  # <-- set this explicitly
 
+    # Convert once to get every page
     images = convert_from_path(pdf_path, dpi=dpi, poppler_path=poppler_path)
+
+    total_pages = len(images)           # e.g. 132
+    num_digits  = len(str(total_pages)) # → 3  (because '132' has 3 digits) to fix sorting error
+
     image_paths = []
-    for i, img in enumerate(images):
-        img_path = os.path.join(output_folder, f"pdf_page_{i + 1}.png")
-        img.save(img_path, 'PNG')
+    for page_num, img in enumerate(images, start=1):
+        filename = f"pdf_page_{page_num:0{num_digits}d}.png"
+        img_path = os.path.join(output_folder, filename)
+        img.save(img_path, "PNG")
         image_paths.append(img_path)
+
     return image_paths
 
 
