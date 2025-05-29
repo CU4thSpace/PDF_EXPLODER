@@ -9,13 +9,16 @@ from tkinter import filedialog, Tk, messagebox
 
 def convert_pdf_to_images(pdf_path, output_folder, dpi=200):
     """Converts PDF pages to images and returns a list of saved image paths."""
-    images = convert_from_path(pdf_path, dpi=dpi)
+    poppler_path = "/opt/homebrew/bin"  # <-- set this explicitly
+
+    images = convert_from_path(pdf_path, dpi=dpi, poppler_path=poppler_path)
     image_paths = []
     for i, img in enumerate(images):
         img_path = os.path.join(output_folder, f"pdf_page_{i + 1}.png")
         img.save(img_path, 'PNG')
         image_paths.append(img_path)
     return image_paths
+
 
 def create_ppt_from_images(folder_path, output_file="output.pptx"):
     prs = Presentation()
